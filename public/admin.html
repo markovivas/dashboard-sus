@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Administração — Painel e-SUS APS</title>
+  <link rel="stylesheet" href="/styles.css" />
+  <link rel="stylesheet" href="/admin.css" />
+</head>
+<body>
+  <aside class="sidebar">
+    <nav class="menu" aria-label="Navegação principal">
+      <a class="menu-item" href="/" title="Indicadores" aria-label="Indicadores">
+        <svg viewBox="0 0 24 24"><path d="M4 20V10l8-6 8 6v10a1 1 0 0 1-1 1h-5v-6H10v6H5a1 1 0 0 1-1-1z"/></svg>
+      </a>
+      <a class="menu-item" href="/#comparar" title="Comparar unidades" aria-label="Comparar unidades">
+        <svg viewBox="0 0 24 24"><path d="M4 20h3V10H4v10zm6.5 0h3V4h-3v16zM17 20h3v-7h-3v7z"/></svg>
+      </a>
+      <hr class="menu-sep" />
+      <a class="menu-item ativo" href="/admin.html" title="Administração do banco" aria-label="Administração">
+        <svg viewBox="0 0 24 24"><path d="M12 8a4 4 0 1 0 0 8 4 4 0 0 0 0-8zm8.4 4a6.5 6.5 0 0 0-.1-1.1l2-1.6-2-3.4-2.4 1a6.6 6.6 0 0 0-1.9-1.1L15.5 3h-4l-.4 2.7a6.6 6.6 0 0 0-1.9 1.1l-2.4-1-2 3.4 2 1.6a6.6 6.6 0 0 0 0 2.2l-2 1.6 2 3.4 2.4-1a6.6 6.6 0 0 0 1.9 1.1l.4 2.7h4l.4-2.7a6.6 6.6 0 0 0 1.9-1.1l2.4 1 2-3.4-2-1.6c.1-.4.1-.7.1-1.1z"/></svg>
+      </a>
+    </nav>
+  </aside>
+
+  <div class="app">
+    <header class="topo">
+      <div class="marca">
+        <a href="/" class="marca-link" title="Prefeitura de Três Corações">
+          <img src="/img/logo.png" alt="Prefeitura de Três Corações" class="logo-topo" />
+        </a>
+        <div class="divisor-marca"></div>
+        <div class="marca-info">
+          <span class="marca-nome">eSUS APS</span>
+          <span class="marca-sub">Painel de Indicadores</span>
+        </div>
+      </div>
+      <div class="topo-acoes">
+        <span class="chip-conexao" id="chipConexao" title="Conexão com o banco">
+          <span class="ponto" id="pontoSessao"></span>
+          <span id="txtSessao">verificando…</span>
+        </span>
+        <a class="icone" href="/" title="Painel de indicadores" aria-label="Painel de indicadores">
+          <svg viewBox="0 0 24 24"><path d="M4 20V10l8-6 8 6v10a1 1 0 0 1-1 1h-5v-6H10v6H5a1 1 0 0 1-1-1z"/></svg>
+        </a>
+        <div class="usuario-bloco" id="usuarioBloco" title="Perfil do usuário logado">
+          <div class="usuario-avatar" id="usuarioAvatar">US</div>
+          <div class="usuario-meta">
+            <span class="usuario-nome" id="usuarioNome">Usuário</span>
+            <span class="usuario-categoria" id="usuarioCategoria">Categoria</span>
+          </div>
+          <button type="button" class="btn-sair" id="btnSair" title="Encerrar sessão" aria-label="Sair">
+            <svg viewBox="0 0 24 24"><path d="M16 17l5-5-5-5v3H9v4h7v3zm-4 4H4a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h8v2H5v14h7v2z"/></svg>
+            <span>Sair</span>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <main class="conteudo">
+      <div class="admin">
+        <nav class="migalha" aria-label="Navegação estrutural">
+          <svg viewBox="0 0 24 24" class="ic-migalha"><path d="M4 20V10l8-6 8 6v10a1 1 0 0 1-1 1h-5v-6H10v6H5a1 1 0 0 1-1-1z"/></svg>
+          <a href="/">Home</a><span class="sep">/</span><span class="atual">Administração</span>
+        </nav>
+
+        <h1 class="titulo">
+          <svg viewBox="0 0 24 24" class="ic-titulo"><path d="M12 8a4 4 0 1 0 0 8 4 4 0 0 0 0-8zm8.4 4a6.5 6.5 0 0 0-.1-1.1l2-1.6-2-3.4-2.4 1a6.6 6.6 0 0 0-1.9-1.1L15.5 3h-4l-.4 2.7a6.6 6.6 0 0 0-1.9 1.1l-2.4-1-2 3.4 2 1.6a6.6 6.6 0 0 0 0 2.2l-2 1.6 2 3.4 2.4-1a6.6 6.6 0 0 0 1.9 1.1l.4 2.7h4l.4-2.7a6.6 6.6 0 0 0 1.9-1.1l2.4 1 2-3.4-2-1.6c.1-.4.1-.7.1-1.1z"/></svg>
+          Administração — Conexão com o banco de dados
+        </h1>
+        <p class="subtitulo">
+          Informe a URL, usuário e senha do PostgreSQL para este painel. Aceita tanto a URL no formato JDBC
+          quanto os campos individuais — para instalar em outro servidor basta alterar estes campos.
+        </p>
+
+        <div id="mensagem" class="mensagem" hidden></div>
+
+        <section class="cartao">
+          <h2 class="titulo-cartao">
+            <svg viewBox="0 0 24 24" class="ic-carta"><path d="M12 3c4.4 0 8 1.3 8 3s-3.6 3-8 3-8-1.3-8-3 3.6-3 8-3zm8 5.5V12c0 1.7-3.6 3-8 3s-8-1.3-8-3V8.5C5.6 9.9 9.2 11 12 11s6.4-1.1 8-2.5zM4 14.5V16c0 1.7 3.6 3 8 3s8-1.3 8-3v-1.5"/></svg>
+            Conexão
+          </h2>
+          <form id="formBanco" autocomplete="off">
+            <div class="campo campo-largo">
+              <label for="url">URL de conexão</label>
+              <input id="url" name="url" type="text"
+                     placeholder="jdbc:postgresql://localhost:5433/esus" />
+              <span class="ajuda">Ex.: <code>jdbc:postgresql://localhost:5433/esus</code></span>
+            </div>
+
+            <div class="grade-campos">
+              <div class="campo">
+                <label for="host">Host</label>
+                <input id="host" name="host" type="text" placeholder="127.0.0.1" />
+              </div>
+              <div class="campo">
+                <label for="porta">Porta</label>
+                <input id="porta" name="porta" type="number" placeholder="5433" min="1" max="65535" />
+              </div>
+              <div class="campo">
+                <label for="database">Banco (database)</label>
+                <input id="database" name="database" type="text" placeholder="esus" />
+              </div>
+              <div class="campo">
+                <label for="usuario">Usuário</label>
+                <input id="usuario" name="usuario" type="text" placeholder="postgres" />
+              </div>
+              <div class="campo">
+                <label for="senha">Senha</label>
+                <input id="senha" name="senha" type="password" placeholder="••••••••" />
+              </div>
+              <div class="campo campo-check">
+                <label class="check">
+                  <input id="ssl" name="ssl" type="checkbox" />
+                  <span>Conectar com SSL</span>
+                </label>
+              </div>
+            </div>
+
+            <div class="botoes">
+              <button type="button" id="btnTestar" class="botao secundario">Testar conexão</button>
+              <button type="submit" id="btnSalvar" class="botao primario">Salvar configuração</button>
+            </div>
+          </form>
+        </section>
+
+        <section class="cartao">
+          <h2 class="titulo-cartao">
+            <svg viewBox="0 0 24 24" class="ic-carta"><path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zm-1.5 14.5-4-4L7.9 11l2.6 2.6 5.6-5.6 1.4 1.4-7 7.1z"/></svg>
+            Situação atual
+          </h2>
+          <div class="status-atual" id="statusAtual">carregando…</div>
+          <div class="tabela-status" id="tabelaStatus" hidden>
+            <table>
+              <tbody>
+                <tr><td>Alvo</td><td id="stAlvo">—</td></tr>
+                <tr><td>Usuário</td><td id="stUsuario">—</td></tr>
+                <tr><td>Versão</td><td id="stVersao">—</td></tr>
+                <tr><td>Tabelas públicas</td><td id="stTabelas">—</td></tr>
+                <tr><td>Latência</td><td id="stLatencia">—</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <section class="cartao">
+          <h2 class="titulo-cartao">
+            <svg viewBox="0 0 24 24" class="ic-carta"><path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+            Observações
+          </h2>
+          <ul class="lista-obs">
+            <li>A senha é gravada no <code>config.json</code> desta pasta — trate o arquivo como sigiloso.</li>
+            <li>Após salvar, a conexão é reaberta automaticamente; não é preciso reiniciar o servidor.</li>
+            <li>Se o painel estiver em outra máquina, use o IP do servidor de banco no campo <b>Host</b>.</li>
+            <li>O painel lê as tabelas DW (<code>tb_fat_*</code>) e auxiliares do e-SUS APS.</li>
+          </ul>
+        </section>
+      </div>
+    </main>
+
+    <footer class="rodape">
+      Painel técnico de acompanhamento. As fórmulas estão parametrizadas em <code>src/indicadores.js</code> e devem ser
+      conferidas nas fichas técnicas oficiais do Ministério da Saúde. Nenhum valor exibido aqui substitui o resultado
+      oficial calculado pelo SISAB / Painel e-SUS APS.
+    </footer>
+  </div>
+
+  <script src="/admin.js"></script>
+</body>
+</html>

@@ -1,0 +1,503 @@
+/* ==========================================================================
+   LOGIN MINIMALISTA & MODERNO — e-SUS APS
+   Inspirado no Design System Minimalista (Split Clean + Vibrant Tech)
+   ========================================================================== */
+
+:root {
+  --azul-login: #5368f5;
+  --azul-login-hover: #4355e8;
+  --azul-login-soft: #eef1fe;
+
+  --fundo-form: #ffffff;
+  --texto-escuro: #111827;
+  --texto-medio: #4b5563;
+  --texto-cinza: #6b7280;
+  --texto-claro: #9ca3af;
+
+  --borda-campo: #d1d5db;
+  --borda-foco: #5368f5;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body.corpo-login {
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  color: var(--texto-escuro);
+  background: #ffffff;
+  min-height: 100vh;
+  margin: 0;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ================= SPLIT 50/50 ================= */
+.login-split {
+  display: grid;
+  grid-template-columns: 46% 54%;
+  min-height: 100vh;
+}
+
+/* ================= COLUNA ESQUERDA: FORMULÁRIO ================= */
+.col-form {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 48px 40px;
+  background: #ffffff;
+}
+
+.form-container {
+  width: 100%;
+  max-width: 400px;
+  display: flex;
+  flex-direction: column;
+}
+
+.logo-area {
+  margin-bottom: 36px;
+  text-align: center;
+}
+
+.logo-img {
+  height: 52px;
+  max-width: 240px;
+  object-fit: contain;
+}
+
+.titulo-login {
+  display: none;
+}
+
+.subtitulo-login {
+  display: none;
+}
+
+/* Avisos */
+.login-aviso {
+  padding: 10px 14px;
+  border-radius: 8px;
+  font-size: 13px;
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.login-aviso.erro {
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  color: #991b1b;
+}
+
+.login-aviso.sucesso {
+  background: #ecfdf5;
+  border: 1px solid #a7f3d0;
+  color: #065f46;
+}
+
+/* Formulário Minimalista */
+.form-minimal {
+  display: flex;
+  flex-direction: column;
+}
+
+/* ================= CAMPOS NOTCHED OUTLINE ================= */
+.campo-notched {
+  position: relative;
+  margin-bottom: 22px;
+}
+
+.campo-notched label {
+  position: absolute;
+  top: -9px;
+  left: 14px;
+  background: #ffffff;
+  padding: 0 6px;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--texto-medio);
+  z-index: 2;
+  transition: color 0.2s ease;
+}
+
+.campo-notched .input-box {
+  display: flex;
+  align-items: center;
+  border: 1.5px solid var(--borda-campo);
+  border-radius: 8px;
+  height: 50px;
+  padding: 0 14px;
+  background: #ffffff;
+  transition: all 0.2s ease;
+}
+
+.campo-notched:focus-within .input-box {
+  border-color: var(--borda-foco);
+  box-shadow: 0 0 0 3.5px rgba(83, 104, 245, 0.12);
+}
+
+.campo-notched:focus-within label {
+  color: var(--azul-login);
+}
+
+.ic-campo {
+  width: 20px;
+  height: 20px;
+  fill: var(--texto-claro);
+  flex-shrink: 0;
+  margin-right: 10px;
+  transition: fill 0.2s ease;
+}
+
+.campo-notched:focus-within .ic-campo {
+  fill: var(--azul-login);
+}
+
+.input-box input,
+.input-box select {
+  width: 100%;
+  height: 100%;
+  border: none;
+  outline: none;
+  background: transparent;
+  font-family: inherit;
+  font-size: 14.5px;
+  color: var(--texto-escuro);
+}
+
+.input-box input::placeholder {
+  color: var(--texto-claro);
+}
+
+.input-box select {
+  cursor: pointer;
+  appearance: none;
+  -webkit-appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%236b7280'%3E%3Cpath d='M7 10l5 5 5-5z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 2px center;
+  background-size: 20px;
+  padding-right: 24px;
+}
+
+.input-box input:disabled,
+.input-box select:disabled {
+  color: var(--texto-claro);
+  cursor: not-allowed;
+}
+
+/* Botão para limpar/trocar usuário selecionado */
+.btn-clear-input {
+  background: transparent;
+  border: none;
+  color: var(--texto-claro);
+  cursor: pointer;
+  padding: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  margin-left: 6px;
+  transition: all 0.15s ease;
+}
+
+.btn-clear-input:hover {
+  color: var(--texto-escuro);
+  background: #f3f4f6;
+}
+
+.btn-clear-input svg {
+  width: 16px;
+  height: 16px;
+  fill: currentColor;
+}
+
+/* Lista suspensa flutuante moderna de profissionais */
+.dropdown-usuarios-flutuante {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  right: 0;
+  background: #ffffff;
+  border: 1.5px solid var(--borda-campo);
+  border-radius: 8px;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.12), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  max-height: 220px;
+  overflow-y: auto;
+  z-index: 50;
+  padding: 4px;
+}
+
+.item-usuario-sugestao {
+  display: flex;
+  flex-direction: column;
+  padding: 8px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.12s ease;
+}
+
+.item-usuario-sugestao:hover,
+.item-usuario-sugestao.ativo {
+  background: var(--azul-login-soft);
+}
+
+.item-usuario-sugestao .sugestao-nome {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--texto-escuro);
+}
+
+.item-usuario-sugestao:hover .sugestao-nome {
+  color: var(--azul-login);
+}
+
+.item-usuario-sugestao .sugestao-detalhe {
+  font-size: 11px;
+  color: var(--texto-cinza);
+  margin-top: 2px;
+}
+
+.sugestao-vazio {
+  padding: 12px;
+  text-align: center;
+  font-size: 12.5px;
+  color: var(--texto-cinza);
+}
+
+/* Botão do Olho (Senha) */
+.btn-ic-olho {
+  background: transparent;
+  border: none;
+  color: var(--texto-claro);
+  cursor: pointer;
+  padding: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+}
+
+.btn-ic-olho:hover {
+  color: var(--texto-escuro);
+  background: #f3f4f6;
+}
+
+.btn-ic-olho svg {
+  width: 19px;
+  height: 19px;
+  fill: currentColor;
+}
+
+/* ================= LINHA DE OPÇÕES ================= */
+.linha-opcoes {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 2px;
+  margin-bottom: 26px;
+  font-size: 13px;
+}
+
+.check-lembrar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--texto-cinza);
+  cursor: pointer;
+  user-select: none;
+}
+
+.check-lembrar input {
+  accent-color: var(--azul-login);
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+}
+
+.link-senha-padrao {
+  background: transparent;
+  border: none;
+  color: var(--texto-cinza);
+  cursor: pointer;
+  font-size: 12.5px;
+  font-family: inherit;
+  transition: color 0.15s;
+}
+
+.link-senha-padrao strong {
+  color: var(--azul-login);
+}
+
+.link-senha-padrao:hover {
+  color: var(--azul-login);
+  text-decoration: underline;
+}
+
+/* ================= BOTÃO ENTRAR ================= */
+.btn-login-principal {
+  width: 100%;
+  height: 50px;
+  background: var(--azul-login);
+  color: #ffffff;
+  border: none;
+  border-radius: 8px;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 12px rgba(83, 104, 245, 0.25);
+  transition: all 0.2s ease;
+}
+
+.btn-login-principal:hover:not(:disabled) {
+  background: var(--azul-login-hover);
+  box-shadow: 0 6px 18px rgba(83, 104, 245, 0.35);
+  transform: translateY(-1px);
+}
+
+.btn-login-principal:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.btn-login-principal:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+}
+
+.spinner-btn {
+  width: 20px;
+  height: 20px;
+  border: 2px solid rgba(255, 255, 255, 0.35);
+  border-top-color: #ffffff;
+  border-radius: 50%;
+  animation: girar 0.8s linear infinite;
+}
+
+@keyframes girar {
+  to { transform: rotate(360deg); }
+}
+
+.rodape-minimal {
+  margin-top: 36px;
+  text-align: center;
+  font-size: 12px;
+  color: var(--texto-claro);
+}
+
+/* ================= COLUNA DIREITA: VISUAL VIBRANTE ================= */
+.col-visual {
+  background: linear-gradient(135deg, #4f5bf6 0%, #3f4ee6 60%, #3240d6 100%);
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 48px 40px;
+  position: relative;
+  overflow: hidden;
+}
+
+.col-visual::before {
+  content: '';
+  position: absolute;
+  top: -15%;
+  right: -15%;
+  width: 480px;
+  height: 480px;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.12) 0%, rgba(255, 255, 255, 0) 70%);
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+.visual-wrapper {
+  max-width: 520px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  position: relative;
+  z-index: 1;
+}
+
+.ilustracao-box {
+  width: 100%;
+  max-width: 480px;
+  margin-bottom: 28px;
+}
+
+.logo-esus-box {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.img-esus-logo {
+  max-width: 230px;
+  width: 100%;
+  height: auto;
+  display: block;
+  filter: drop-shadow(0 14px 28px rgba(0, 0, 0, 0.22));
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  user-select: none;
+}
+
+.img-esus-logo:hover {
+  transform: translateY(-4px) scale(1.03);
+}
+
+.visual-texto {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+.visual-tag {
+  font-size: 12px;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.8);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.visual-titulo {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 28px;
+  font-weight: 800;
+  line-height: 1.25;
+  color: #ffffff;
+  letter-spacing: -0.02em;
+}
+
+.visual-subtitulo {
+  font-size: 14.5px;
+  line-height: 1.5;
+  color: rgba(255, 255, 255, 0.85);
+  max-width: 420px;
+}
+
+/* ================= RESPONSIVIDADE ================= */
+@media (max-width: 960px) {
+  .login-split {
+    grid-template-columns: 1fr;
+  }
+
+  .col-visual {
+    display: none;
+  }
+
+  .col-form {
+    padding: 40px 24px;
+  }
+
+  .titulo-login {
+    font-size: 28px;
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "host": "0.0.0.0",
+  "porta": 8088,
+  "periodo": {
+    "inicio": "2026-01-01",
+    "fim": "2026-10-13"
+  },
+  "periodoUnidade": "MES",
+  "maxPaginas": 10,
+  "tamanhoPagina": 500,
+  "banco": {
+    "url": "jdbc:postgresql://localhost:5433/esus",
+    "host": "localhost",
+    "porta": "5433",
+    "database": "esus",
+    "usuario": "esus_leitura",
+    "senha": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+    "ssl": false
+  }
+}

@@ -1,0 +1,678 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Painel e-SUS APS — Acompanhamento, Análise e Apoio à Tomada de Decisão</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/styles.css" />
+</head>
+<body>
+  <!-- Sidebar de Navegação Rápida -->
+  <aside class="sidebar">
+    <nav class="menu" aria-label="Navegação principal">
+      <button type="button" class="menu-item ativo" data-nav="painel" title="Painel Executivo" aria-label="Painel Executivo">
+        <svg viewBox="0 0 24 24"><path d="M4 20V10l8-6 8 6v10a1 1 0 0 1-1 1h-5v-6H10v6H5a1 1 0 0 1-1-1z"/></svg>
+      </button>
+      <button type="button" class="menu-item" data-nav="decisao" title="Apoio à Decisão & Ações" aria-label="Apoio à Decisão">
+        <svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2zm1 15h-2v-2h2zm0-4h-2V7h2z"/></svg>
+      </button>
+      <button type="button" class="menu-item" data-nav="comparacao" title="Comparação & Ranking" aria-label="Comparação">
+        <svg viewBox="0 0 24 24"><path d="M4 20h3V10H4v10zm6.5 0h3V4h-3v16zM17 20h3v-7h-3v7z"/></svg>
+      </button>
+      <button type="button" class="menu-item" data-nav="evolucao" title="Evolução Quadrimestral" aria-label="Evolução">
+        <svg viewBox="0 0 24 24"><path d="M3.5 18.5l6-6 4 4L22 7.5l-1.5-1.5-7 7-4-4-7.5 7.5z"/></svg>
+      </button>
+      <button type="button" class="menu-item" data-nav="plano" title="Plano de Ação da Equipe" aria-label="Plano de Ação">
+        <svg viewBox="0 0 24 24"><path d="M19 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2zm-9 14l-4-4 1.4-1.4L10 14.2l7.6-7.6L19 8l-9 9z"/></svg>
+      </button>
+      <hr class="menu-sep" />
+      <a class="menu-item" href="/admin.html" id="linkAdmin" title="Administração do Banco" aria-label="Administração">
+        <svg viewBox="0 0 24 24"><path d="M12 8a4 4 0 1 0 0 8 4 4 0 0 0 0-8zm8.4 4a6.5 6.5 0 0 0-.1-1.1l2-1.6-2-3.4-2.4 1a6.6 6.6 0 0 0-1.9-1.1L15.5 3h-4l-.4 2.7a6.6 6.6 0 0 0-1.9 1.1l-2.4-1-2 3.4 2 1.6a6.6 6.6 0 0 0 0 2.2l-2 1.6 2 3.4 2.4-1a6.6 6.6 0 0 0 1.9 1.1l.4 2.7h4l.4-2.7a6.6 6.6 0 0 0 1.9-1.1l2.4 1 2-3.4-2-1.6c.1-.4.1-.7.1-1.1z"/></svg>
+      </a>
+    </nav>
+  </aside>
+
+  <div class="app">
+    <!-- Barra de Progresso Superior e Overlay de Carregamento -->
+    <div id="barraProgressoTopo" class="barra-progresso-topo"></div>
+
+    <div id="overlayLoading" class="overlay-loading">
+      <div class="card-loading">
+        <div class="spinner-loading"></div>
+        <div class="texto-loading">
+          <h3 class="titulo-loading" id="txtLoadingTitulo">Carregando Dados do e-SUS APS</h3>
+          <p class="sub-loading" id="txtLoadingSub">Consultando microdados no PostgreSQL e calculando indicadores...</p>
+        </div>
+        <div class="barra-loading-indeterminada">
+          <div class="barra-loading-linha"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Topo / Header da Aplicação -->
+    <header class="topo">
+      <div class="marca">
+        <a href="/" class="marca-link" title="Prefeitura de Três Corações">
+          <img src="/img/logo.png" alt="Prefeitura de Três Corações" class="logo-topo" />
+        </a>
+        <div class="divisor-marca"></div>
+        <div class="marca-info">
+          <div class="marca-titulo-linha">
+            <span class="marca-nome">e-SUS APS</span>
+            <span class="badge-versao">Gestão 2026</span>
+          </div>
+          <span class="marca-sub">Acompanhamento, Análise e Apoio à Tomada de Decisão</span>
+        </div>
+      </div>
+
+      <div class="topo-acoes">
+        <!-- Indicador de Escopo do Usuário Logado -->
+        <div class="escopo-badge-topo" id="escopoBadgeTopo" title="Escopo de dados restrito conforme seu perfil">
+          <svg viewBox="0 0 24 24" class="ic-escopo"><path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/></svg>
+          <span id="txtEscopoBadge">Carregando perfil…</span>
+        </div>
+
+        <span class="chip-conexao" id="chipConexao" title="Conexão com o banco">
+          <span class="ponto" id="pontoSessao"></span>
+          <span id="txtSessao">verificando…</span>
+        </span>
+
+        <button type="button" class="icone" id="btnDemonstrar" title="Alternar modo demonstração" aria-label="Modo Demonstração">
+          <svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>
+        </button>
+
+        <!-- Bloco do Usuário Logado -->
+        <div class="usuario-bloco" id="usuarioBloco" title="Perfil do usuário logado">
+          <div class="usuario-avatar" id="usuarioAvatar">US</div>
+          <div class="usuario-meta">
+            <span class="usuario-nome" id="usuarioNome">Usuário</span>
+            <span class="usuario-categoria" id="usuarioCategoria">Categoria</span>
+            <span class="usuario-escopo" id="usuarioEscopo" title="Escopo de acesso aos dados">🔒 Escopo</span>
+          </div>
+          <button type="button" class="btn-sair" id="btnSair" title="Encerrar sessão" aria-label="Sair">
+            <svg viewBox="0 0 24 24"><path d="M16 17l5-5-5-5v3H9v4h7v3zm-4 4H4a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h8v2H5v14h7v2z"/></svg>
+            <span>Sair</span>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- Sub-header com Abas Principais de Gestão -->
+    <nav class="abas-navegacao" role="tablist" aria-label="Navegação em abas">
+      <button type="button" class="aba-item ativa" data-tab="painel" role="tab" aria-selected="true">
+        <svg viewBox="0 0 24 24"><path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"/></svg>
+        <span>Painel Executivo</span>
+      </button>
+      <button type="button" class="aba-item" data-tab="decisao" role="tab" aria-selected="false">
+        <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+        <span>Apoio à Decisão & Prioridades</span>
+        <span class="badge-contador" id="contadorPrioridades">0</span>
+      </button>
+      <button type="button" class="aba-item" data-tab="comparacao" role="tab" aria-selected="false">
+        <svg viewBox="0 0 24 24"><path d="M4 20h3V10H4v10zm6.5 0h3V4h-3v16zM17 20h3v-7h-3v7z"/></svg>
+        <span>Comparação & Ranking</span>
+      </button>
+      <button type="button" class="aba-item" data-tab="evolucao" role="tab" aria-selected="false">
+        <svg viewBox="0 0 24 24"><path d="M16 6l2.29 2.29-4.88 4.88-4-4L2 16.59 3.41 18l6-6 4 4 6.3-6.29L22 12V6z"/></svg>
+        <span>Evolução Quadrimestral</span>
+      </button>
+      <button type="button" class="aba-item" data-tab="plano" role="tab" aria-selected="false">
+        <svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/></svg>
+        <span>Plano de Ação da Equipe</span>
+      </button>
+    </nav>
+
+    <!-- Conteúdo Principal -->
+    <main class="conteudo">
+      <div id="aviso" class="aviso" hidden></div>
+
+      <!-- ================= ABA 1: PAINEL EXECUTIVO ================= -->
+      <section id="viewPainel" class="view-secao">
+        <!-- Barra de Contexto Organizacional & Filtros -->
+        <div class="cartao barra-filtros-nova">
+          <div class="bloco-filtro-periodo">
+            <div class="linha-topo-filtro">
+              <span class="rotulo-filtro">
+                <svg viewBox="0 0 24 24" class="ic-filtro"><path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19a2 2 0 0 0 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11z"/></svg>
+                Competência de Avaliação
+              </span>
+              <div class="botoes-atalho-quadrimestre" id="atalhosQuadrimestre">
+                <button type="button" class="btn-q ativo" data-q="q1_2026">Q1/2026</button>
+                <button type="button" class="btn-q" data-q="q2_2026">Q2/2026</button>
+                <button type="button" class="btn-q" data-q="q3_2026">Q3/2026</button>
+                <button type="button" class="btn-q" data-q="ano_2026">2026 Completo</button>
+                <button type="button" class="btn-q" data-q="custom">Personalizado</button>
+              </div>
+            </div>
+
+            <div class="linha-datas-personalizadas" id="linhaDatasCustom" hidden>
+              <label class="campo-data-inline" for="dataInicio">
+                <span>Início:</span>
+                <input type="date" id="dataInicio" />
+              </label>
+              <label class="campo-data-inline" for="dataFim">
+                <span>Fim:</span>
+                <input type="date" id="dataFim" />
+              </label>
+            </div>
+          </div>
+
+          <div class="bloco-filtro-unidade" id="containerFiltroUnidade">
+            <label class="campo-select-moderno" for="selectUnidade">
+              <span class="rotulo-filtro">
+                <svg viewBox="0 0 24 24" class="ic-filtro"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+                Unidade de Saúde (UBS)
+              </span>
+              <select id="selectUnidade">
+                <option value="todas">Município Completo (Todas as Unidades)</option>
+              </select>
+            </label>
+          </div>
+
+          <div class="bloco-filtro-equipe" id="containerFiltroEquipe">
+            <label class="campo-select-moderno" for="selectEquipe">
+              <span class="rotulo-filtro">
+                <svg viewBox="0 0 24 24" class="ic-filtro"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5s-3 1.34-3 3 1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
+                Equipe de Saúde
+              </span>
+              <select id="selectEquipe">
+                <option value="todas">Todas as Equipes</option>
+              </select>
+            </label>
+          </div>
+
+          <div class="bloco-acoes-filtro">
+            <label class="toggle-comparar-check" title="Comparar automaticamente com o quadrimestre anterior para calcular evolução e deltas">
+              <input type="checkbox" id="chkCompararPeriodo" checked />
+              <span>Comparar com quadrimestre anterior</span>
+            </label>
+            <button type="button" class="botao primario" id="btnAtualizar">
+              <svg viewBox="0 0 24 24" class="ic-botao"><path d="M12 5V1L7 6l5 5V7a6 6 0 1 1-6 6H4a8 8 0 1 0 8-8z"/></svg>
+              <span>Recalcular</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Banner de Ações Clínicas Prioritárias (Decision Support Imediato) -->
+        <div class="cartao banner-prioridades" id="bannerPrioridades" hidden>
+          <div class="banner-cabecalho">
+            <div class="banner-titulo-grupo">
+              <span class="banner-tag">Ação Imediata Recomendada</span>
+              <h2 class="banner-titulo">Top Prioridades Clínicas para Melhoria dos Resultados</h2>
+              <p class="banner-sub">Identificamos os maiores gargalos em boas práticas que impactam diretamente a nota e o cofinanciamento:</p>
+            </div>
+            <button type="button" class="botao secundario btn-sm" id="btnIrParaDecisao">
+              <span>Ver Análise Completa</span>
+              <svg viewBox="0 0 24 24" class="ic-seta"><path d="M5 13h11.86l-5.43 5.43 1.42 1.42L21.71 11.7l-8.86-8.85-1.42 1.42L16.86 10H5v3z"/></svg>
+            </button>
+          </div>
+          <div class="grid-cards-prioridades" id="cardsPrioridadesDestaque"></div>
+        </div>
+
+        <!-- Cards Executivos de Resumo / ISF -->
+        <div class="kpis-executivos-grid" id="kpisExecutivos">
+          <!-- Card ISF Geral -->
+          <div class="cartao-kpi-executivo" id="kpiIsfGeral">
+            <div class="kpi-topo">
+              <span class="kpi-rotulo">Índice Sintético Final (ISF)</span>
+              <span class="badge-faixa" id="badgeIsfGeral">—</span>
+            </div>
+            <div class="kpi-valor-linha">
+              <span class="kpi-grande" id="valorIsfGeral">—</span>
+              <span class="kpi-escala">/ 10.0</span>
+              <div class="kpi-delta" id="deltaIsfGeral" title="Variação em relação ao período anterior"></div>
+            </div>
+            <div class="kpi-barra-progresso">
+              <div class="kpi-progresso-preenchimento" id="progressoIsfGeral" style="width: 0%;"></div>
+            </div>
+            <span class="kpi-rodape-texto" id="subtextoIsfGeral">Aguardando cálculo…</span>
+          </div>
+
+          <!-- Card Bloco eSF / eAP -->
+          <div class="cartao-kpi-executivo" id="kpiIsfEsf">
+            <div class="kpi-topo">
+              <span class="kpi-rotulo">Bloco eSF / Atenção Primária</span>
+              <span class="badge-faixa" id="badgeIsfEsf">—</span>
+            </div>
+            <div class="kpi-valor-linha">
+              <span class="kpi-grande" id="valorIsfEsf">—</span>
+              <span class="kpi-escala">/ 10.0</span>
+            </div>
+            <div class="kpi-barra-progresso">
+              <div class="kpi-progresso-preenchimento" id="progressoIsfEsf" style="width: 0%;"></div>
+            </div>
+            <span class="kpi-rodape-texto" id="subtextoIsfEsf">7 indicadores parametrizados (C1 a C7)</span>
+          </div>
+
+          <!-- Card Bloco Saúde Bucal -->
+          <div class="cartao-kpi-executivo" id="kpiIsfEsb">
+            <div class="kpi-topo">
+              <span class="kpi-rotulo">Bloco Saúde Bucal (eSB)</span>
+              <span class="badge-faixa" id="badgeIsfEsb">—</span>
+            </div>
+            <div class="kpi-valor-linha">
+              <span class="kpi-grande" id="valorIsfEsb">—</span>
+              <span class="kpi-escala">/ 10.0</span>
+            </div>
+            <div class="kpi-barra-progresso">
+              <div class="kpi-progresso-preenchimento" id="progressoIsfEsb" style="width: 0%;"></div>
+            </div>
+            <span class="kpi-rodape-texto" id="subtextoIsfEsb">6 indicadores de saúde bucal (B1 a B6)</span>
+          </div>
+
+          <!-- Card Distribuição das Faixas de Desempenho -->
+          <div class="cartao-kpi-executivo" id="kpiDistribuicaoFaixas">
+            <div class="kpi-topo">
+              <span class="kpi-rotulo">Distribuição das Metas</span>
+              <span class="kpi-total-avaliados" id="txtTotalAvaliados">15 indicadores</span>
+            </div>
+            <div class="barra-distribuicao-segmentada" id="barraDistribuicao">
+              <div class="seg-otimo" id="segOtimo" style="width: 0%;" title="Ótimo"></div>
+              <div class="seg-bom" id="segBom" style="width: 0%;" title="Bom"></div>
+              <div class="seg-suficiente" id="segSuficiente" style="width: 0%;" title="Suficiente"></div>
+              <div class="seg-regular" id="segRegular" style="width: 0%;" title="Regular"></div>
+            </div>
+            <div class="legenda-distribuicao" id="legendaDistribuicao">
+              <span class="leg-item"><span class="bolinha bolinha-otimo"></span> <b id="qtdOtimo">0</b> Ótimo</span>
+              <span class="leg-item"><span class="bolinha bolinha-bom"></span> <b id="qtdBom">0</b> Bom</span>
+              <span class="leg-item"><span class="bolinha bolinha-suficiente"></span> <b id="qtdSuficiente">0</b> Suficiente</span>
+              <span class="leg-item"><span class="bolinha bolinha-regular"></span> <b id="qtdRegular">0</b> Regular</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Filtros Rápidos de Exibição de Indicadores -->
+        <div class="linha-filtros-cards">
+          <div class="grupo-botoes-bloco" id="botoesFiltroBloco">
+            <button type="button" class="btn-filtro-bloco ativo" data-bloco="todos">Todos os Blocos (15)</button>
+            <button type="button" class="btn-filtro-bloco" data-bloco="eSF/eAP">eSF / eAP (C1–C7)</button>
+            <button type="button" class="btn-filtro-bloco" data-bloco="eSB">Saúde Bucal (B1–B6)</button>
+            <button type="button" class="btn-filtro-bloco" data-bloco="eMulti">eMulti (M1–M2)</button>
+          </div>
+
+          <div class="busca-indicador-rapida">
+            <input type="search" id="buscaIndicadorInput" placeholder="Filtrar indicador por nome, código ou doença…" />
+          </div>
+        </div>
+
+        <!-- Grid dos Indicadores da APS -->
+        <div id="blocos"></div>
+        <p id="semResultado" class="vazio" hidden>Nenhum indicador corresponde ao filtro selecionado.</p>
+
+        <!-- Diagnóstico de Fontes do Banco -->
+        <details class="cartao fontes" id="painelFontes">
+          <summary>
+            <div class="summary-esquerda">
+              <svg viewBox="0 0 24 24" class="ic-fontes"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+              <span>Auditoria e Diagnóstico das Fontes de Dados (PostgreSQL e-SUS PEC)</span>
+              <span class="badge-total-fontes" id="badgeTotalFontes">15 fontes ativas</span>
+            </div>
+            <div class="summary-direita">
+              <span class="status-banco-pill" id="pillStatusBanco">PostgreSQL Conectado</span>
+              <svg viewBox="0 0 24 24" class="chevron-fontes"><path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"/></svg>
+            </div>
+          </summary>
+          <div class="conteudo-fontes">
+            <div class="rolagem">
+              <table class="tabela-fontes">
+                <thead>
+                  <tr>
+                    <th>Fonte de Dados</th>
+                    <th>Status</th>
+                    <th class="dir">Registros Vinculados</th>
+                    <th>Observações Técnicas</th>
+                  </tr>
+                </thead>
+                <tbody id="corpoFontes"></tbody>
+              </table>
+            </div>
+          </div>
+        </details>
+      </section>
+
+      <!-- ================= ABA 2: APOIO À DECISÃO ================= -->
+      <section id="viewDecisao" class="view-secao" hidden>
+        <div class="cabecalho-secao">
+          <h1 class="titulo-secao">
+            <svg viewBox="0 0 24 24" class="ic-secao"><path d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2zm1 15h-2v-2h2zm0-4h-2V7h2z"/></svg>
+            Apoio à Decisão & Gestão Estratégica da Atenção Primária
+          </h1>
+          <p class="subtitulo-secao">
+            Respostas práticas e estruturadas com base nos microdados para orientar o plano de trabalho de gestores, coordenadores e profissionais de saúde.
+          </p>
+        </div>
+
+        <div class="perguntas-gestao-grid" id="gridPerguntasGestao">
+          <!-- As 6 perguntas de gestão serão renderizadas dinamicamente aqui -->
+        </div>
+      </section>
+
+      <!-- ================= ABA 3: COMPARAÇÃO & RANKING ================= -->
+      <section id="viewComparacao" class="view-secao" hidden>
+        <div class="cabecalho-secao">
+          <h1 class="titulo-secao">
+            <svg viewBox="0 0 24 24" class="ic-secao"><path d="M4 20h3V10H4v10zm6.5 0h3V4h-3v16zM17 20h3v-7h-3v7z"/></svg>
+            Comparação de Desempenho & Ranking Territorial
+          </h1>
+          <p class="subtitulo-secao">
+            Acompanhe o desempenho comparativo entre unidades de saúde (UBS) e equipes (INE) para identificar boas práticas e orientar suporte técnico às unidades prioritárias.
+          </p>
+        </div>
+
+        <div class="cartao barra-controles-tabela">
+          <div class="toggle-tipo-comparacao" id="toggleTipoComparacao">
+            <button type="button" class="ativo" data-alvo="unidades">Ranking por Unidade de Saúde (UBS)</button>
+            <button type="button" data-alvo="equipes">Ranking por Equipe (INE)</button>
+          </div>
+          <div class="busca-tabela">
+            <input type="search" id="buscaRankingInput" placeholder="Buscar unidade, bairro ou equipe…" />
+          </div>
+        </div>
+
+        <div class="cartao" id="painelComparacaoTabela">
+          <div class="rolagem">
+            <table class="tabela tabela-ranking" id="tabelaRankingGeral">
+              <thead>
+                <tr>
+                  <th class="centro">#</th>
+                  <th>Unidade / Equipe</th>
+                  <th>CNES / INE</th>
+                  <th class="dir">População Vinculada</th>
+                  <th class="dir">ISF Estimado</th>
+                  <th class="centro">Faixa</th>
+                  <th class="centro">Metas no Ótimo</th>
+                  <th class="centro">Metas no Regular</th>
+                </tr>
+              </thead>
+              <tbody id="corpoRankingGeral"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= ABA 4: EVOLUÇÃO QUADRIMESTRAL ================= -->
+      <section id="viewEvolucao" class="view-secao" hidden>
+        <div class="cabecalho-secao">
+          <h1 class="titulo-secao">
+            <svg viewBox="0 0 24 24" class="ic-secao"><path d="M16 6l2.29 2.29-4.88 4.88-4-4L2 16.59 3.41 18l6-6 4 4 6.3-6.29L22 12V6z"/></svg>
+            Evolução Histórica e Comparativo Quadrimestral
+          </h1>
+          <p class="subtitulo-secao">
+            Acompanhe o avanço dos indicadores ao longo dos quadrimestres para verificar se as intervenções clínicas e ações de busca ativa estão produzindo melhorias sustentadas.
+          </p>
+        </div>
+
+        <div class="cartao" id="cartaoEvolucaoQuadrimestral">
+          <div class="rolagem">
+            <table class="tabela tabela-evolucao" id="tabelaEvolucaoQuadrimestral">
+              <thead>
+                <tr>
+                  <th>Código</th>
+                  <th>Indicador</th>
+                  <th>Bloco</th>
+                  <th class="dir">Competência Atual</th>
+                  <th class="dir">Competência Anterior</th>
+                  <th class="centro">Variação (Delta)</th>
+                  <th class="centro">Tendência</th>
+                </tr>
+              </thead>
+              <tbody id="corpoEvolucaoQuadrimestral"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= ABA 5: PLANO DE AÇÃO DA EQUIPE ================= -->
+      <section id="viewPlano" class="view-secao" hidden>
+        <div class="cabecalho-secao com-botao">
+          <div>
+            <h1 class="titulo-secao">
+              <svg viewBox="0 0 24 24" class="ic-secao"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/></svg>
+              Plano de Ação & Melhoria Contínua da Equipe
+            </h1>
+            <p class="subtitulo-secao">
+              Registre, atribua responsabilidades e monitore metas pactuadas pela equipe de saúde para melhorar o desempenho nos indicadores.
+            </p>
+          </div>
+          <button type="button" class="botao sucesso" id="btnNovaAcao">
+            <svg viewBox="0 0 24 24" class="ic-botao"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
+            <span>Nova Ação</span>
+          </button>
+        </div>
+
+        <div class="cartao barra-controles-plano">
+          <div class="filtros-plano-status" id="filtroStatusPlano">
+            <button type="button" class="ativo" data-status="todos">Todas as Ações</button>
+            <button type="button" data-status="planejado">Planejadas</button>
+            <button type="button" data-status="em_andamento">Em Andamento</button>
+            <button type="button" data-status="concluido">Concluídas</button>
+          </div>
+        </div>
+
+        <div class="grid-planos-acao" id="gridPlanosAcao">
+          <!-- Cards de ações renderizados dinamicamente -->
+        </div>
+        <p class="vazio" id="msgVazioPlano" hidden>Nenhuma ação registrada para os filtros selecionados. Clique em "Nova Ação" ou selecione uma prioridade na aba "Apoio à Decisão".</p>
+      </section>
+
+      <!-- ================= VIEW: DETALHAMENTO DO INDICADOR (DRILL-DOWN) ================= -->
+      <section id="viewDetalhe" class="view-secao" hidden>
+        <nav class="migalha" aria-label="Navegação estrutural">
+          <button type="button" class="btn-voltar-migalha" id="btnVoltarPainel">
+            <svg viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
+            <span>Voltar ao Painel</span>
+          </button>
+          <span class="sep">/</span>
+          <span class="atual" id="migalhaDetalhe">—</span>
+        </nav>
+
+        <div class="cabecalho-detalhe-cartao">
+          <div class="detalhe-tags-linha">
+            <span class="badge-codigo-detalhe" id="detCodigoOficial">C1</span>
+            <span class="badge-bloco-detalhe" id="detBloco">eSF/eAP</span>
+            <span class="badge-faixa" id="detFaixa">—</span>
+          </div>
+          <h1 class="detalhe-titulo" id="detTitulo">—</h1>
+          <p class="detalhe-formula" id="detFormula">—</p>
+        </div>
+
+        <div class="cartao barra-filtros-detalhe">
+          <div class="campo-periodo-detalhe">
+            <span class="rotulo-sub">Competência:</span>
+            <div class="grupo-datas-detalhe">
+              <input type="date" id="detDataInicio" />
+              <span>até</span>
+              <input type="date" id="detDataFim" />
+              <button type="button" class="botao secundario" id="btnAtualizarDetalhe">Atualizar</button>
+            </div>
+          </div>
+          <label class="campo-select-inline" for="detUnidade">
+            <span>Unidade:</span>
+            <select id="detUnidade"><option value="todas">Todas as Unidades</option></select>
+          </label>
+          <label class="campo-select-inline" for="detEquipe">
+            <span>Equipe:</span>
+            <select id="detEquipe"><option value="todas">Todas as Equipes</option></select>
+          </label>
+        </div>
+
+        <div class="kpi-linha" id="detKpis"></div>
+
+        <!-- Estado de Carregamento do Detalhe -->
+        <div class="cartao loading-detalhe-card" id="detLoadingState" hidden>
+          <div class="spinner-loading"></div>
+          <p>Consultando registros clínicos e gerando lista nominal no banco de dados...</p>
+        </div>
+
+        <!-- Decomposição das Boas Práticas Pontuadas -->
+        <div class="cartao" id="detPraticasCartao">
+          <h2 class="titulo-cartao">
+            <svg viewBox="0 0 24 24" class="ic-cartao"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/></svg>
+            Critérios de Cálculo e Boas Práticas Avaliadas
+          </h2>
+          <div class="rolagem">
+            <table class="tabela" id="detTabelaPraticas">
+              <thead>
+                <tr>
+                  <th>Boas Práticas Pontuadas</th>
+                  <th class="centro">Peso Oficial</th>
+                  <th class="centro">Status da Regra</th>
+                </tr>
+              </thead>
+              <tbody id="detCorpoPraticas"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Classificação por Equipe (INE) -->
+        <div class="cartao" id="detEquipesCartao" hidden>
+          <h2 class="titulo-cartao">
+            <svg viewBox="0 0 24 24" class="ic-cartao"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5s-3 1.34-3 3 1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
+            Desempenho Comparativo por Equipe
+          </h2>
+          <div class="rolagem">
+            <table class="tabela" id="detTabelaEquipes">
+              <thead>
+                <tr>
+                  <th>Equipe</th>
+                  <th>INE</th>
+                  <th class="dir">Elegíveis</th>
+                  <th class="dir">% Atingido</th>
+                  <th class="centro">Classificação</th>
+                </tr>
+              </thead>
+              <tbody></tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Lista Nominal para Busca Ativa (LGPD-safe) -->
+        <div class="cartao" id="detPessoasCartao" hidden>
+          <div class="cab-cartao">
+            <div>
+              <h2 class="titulo-cartao">
+                <svg viewBox="0 0 24 24" class="ic-cartao"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+                Lista Nominal para Busca Ativa Territorial
+              </h2>
+              <p class="sub-cartao">Identifique nominalmente os usuários cadastrados e quais cuidados clínicos estão pendentes para agendamento.</p>
+            </div>
+            <div class="acoes-cartao">
+              <label class="check">
+                <input type="checkbox" id="soPendencia" checked />
+                <span>Apenas com pendências (&lt; 100 pts)</span>
+              </label>
+              <button type="button" class="botao sucesso" id="btnExportar">
+                <svg viewBox="0 0 24 24" class="ic-botao"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg>
+                <span>Exportar CSV</span>
+              </button>
+            </div>
+          </div>
+
+          <div class="busca-pessoas-linha">
+            <input type="search" id="buscaPessoa" placeholder="Buscar cidadão por nome, equipe ou unidade…" />
+            <button type="button" class="botao primario" id="btnBuscar">Pesquisar</button>
+          </div>
+
+          <div class="rolagem">
+            <table class="tabela tabela-nominal" id="detTabelaPessoas">
+              <thead></thead>
+              <tbody></tbody>
+            </table>
+          </div>
+
+          <div class="rodape-tabela">
+            <span id="detPaginacao">—</span>
+            <div class="botoes-pag">
+              <button type="button" class="botao secundario" id="btnAnterior">‹ Anterior</button>
+              <button type="button" class="botao primario" id="btnProxima">Próxima ›</button>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- Modal: Adicionar / Editar Plano de Ação -->
+    <dialog class="modal-dialog" id="modalPlanoAcao">
+      <div class="modal-conteudo">
+        <div class="modal-cabecalho">
+          <h2 class="modal-titulo" id="modalPlanoTitulo">Cadastrar Ação de Melhoria</h2>
+          <button type="button" class="btn-fechar-modal" id="btnFecharModalPlano">×</button>
+        </div>
+        <form id="formPlanoAcao" class="modal-form">
+          <input type="hidden" id="planoId" />
+          <input type="hidden" id="planoIndicadorId" />
+
+          <label class="campo-form">
+            <span>Título da Ação:</span>
+            <input type="text" id="planoTituloInput" placeholder="Ex: Mutirão de exame do pé diabético para pacientes vinculados" required />
+          </label>
+
+          <label class="campo-form">
+            <span>Indicador Vinculado:</span>
+            <input type="text" id="planoIndicadorTituloInput" placeholder="Ex: C4 - Cuidado da pessoa com diabetes" readonly />
+          </label>
+
+          <div class="linha-campos-form">
+            <label class="campo-form">
+              <span>Responsável:</span>
+              <input type="text" id="planoResponsavelInput" placeholder="Ex: Dra. Mariana / Equipe ESF 02" required />
+            </label>
+            <label class="campo-form">
+              <span>Categoria:</span>
+              <select id="planoCategoriaSelect">
+                <option value="Busca Ativa">Busca Ativa Territorial</option>
+                <option value="Procedimento Clínico">Procedimento Clínico</option>
+                <option value="Consulta Clínica">Consulta Clínica</option>
+                <option value="Visita Domiciliar">Visita Domiciliar de ACS</option>
+                <option value="Imunização">Imunização / Sala de Vacina</option>
+                <option value="Saúde Bucal">Saúde Bucal</option>
+                <option value="Outro">Outro</option>
+              </select>
+            </label>
+          </div>
+
+          <div class="linha-campos-form">
+            <label class="campo-form">
+              <span>Meta de Cidadãos:</span>
+              <input type="number" id="planoMetaPacientes" placeholder="Ex: 45" />
+            </label>
+            <label class="campo-form">
+              <span>Prazo Limite:</span>
+              <input type="date" id="planoPrazo" required />
+            </label>
+          </div>
+
+          <label class="campo-form">
+            <span>Descrição / Estratégia de Execução:</span>
+            <textarea id="planoDescricao" rows="3" placeholder="Detalhes de como a equipe organizará a busca ativa, horários estendidos ou visitas domiciliares…"></textarea>
+          </label>
+
+          <label class="campo-form">
+            <span>Status da Ação:</span>
+            <select id="planoStatusSelect">
+              <option value="planejado">Planejado</option>
+              <option value="em_andamento">Em Andamento</option>
+              <option value="concluido">Concluído</option>
+            </select>
+          </label>
+
+          <div class="modal-rodape">
+            <button type="button" class="botao secundario" id="btnCancelarModalPlano">Cancelar</button>
+            <button type="submit" class="botao primario">Salvar Ação</button>
+          </div>
+        </form>
+      </div>
+    </dialog>
+
+    <footer class="rodape">
+      <span>Painel de Apoio à Gestão e Tomada de Decisão da APS — Prefeitura de Três Corações.</span>
+      <span>Cálculo parametrizado pelas Notas Metodológicas Oficiais do Ministério da Saúde.</span>
+    </footer>
+  </div>
+
+  <script src="/app.js"></script>
+</body>
+</html>

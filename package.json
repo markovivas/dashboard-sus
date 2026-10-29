@@ -1,0 +1,16 @@
+{
+  "name": "esus-aps-painel-indicadores",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Painel dos 15 indicadores de boas praticas do e-SUS APS (componente de qualidade do cofinanciamento federal)",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "engines": {
+    "node": ">=16"
+  },
+  "dependencies": {
+    "pg": "^8.23.1"
+  }
+}
